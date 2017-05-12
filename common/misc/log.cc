@@ -304,27 +304,30 @@ string Log::getModule(const char *filename)
 
 void Log::log(ErrorState err, const char* source_file, SInt32 source_line, const char *format, ...)
 {
-   tile_id_t tile_id;
-   bool sim_thread;
-   discoverCore(&tile_id, &sim_thread);
-   
-   FILE *file;
-   Lock *lock;
+	tile_id_t tile_id;
+	bool sim_thread;
+	discoverCore(&tile_id, &sim_thread);
 
-   getFile(tile_id, sim_thread, &file, &lock);
-   int tid = syscall(__NR_gettid);
+	FILE *file;
+	Lock *lock;
+
+	getFile(tile_id, sim_thread, &file, &lock);
+	int tid = syscall(__NR_gettid);
 
 
-   char message[512];
-   char *p = message;
+	char message[512];
+	char *p = message;
 
-   // This is ugly, but it just prints the time stamp, process number, tile number, source file/line
-   if (tile_id != INVALID_TILE_ID) // valid tile id
-      p += sprintf(p, "%-10llu [%5d]  (%2i) [%2i]%s[%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, Config::getSingleton()->getCurrentProcessNum(), tile_id, (sim_thread ? "* " : "  "), source_file, source_line);
-   else if (Config::getSingleton()->getCurrentProcessNum() != (UInt32)-1) // valid proc id
-      p += sprintf(p, "%-10llu [%5d]  (%2i) [  ]  [%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, Config::getSingleton()->getCurrentProcessNum(), source_file, source_line);
-   else // who knows
-      p += sprintf(p, "%-10llu [%5d]  (  ) [  ]  [%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, source_file, source_line);
+	if (tile_id!=0)
+	{
+		// This is ugly, but it just prints the time stamp, process number, tile number, source file/line
+		if (tile_id != INVALID_TILE_ID) // valid tile id
+			p += sprintf(p, "%-10llu [%5d]  (%2i) [%2i]%s[%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, Config::getSingleton()->getCurrentProcessNum(), tile_id, (sim_thread ? "* " : "  "), source_file, source_line);
+		else if (Config::getSingleton()->getCurrentProcessNum() != (UInt32)-1) // valid proc id
+			p += sprintf(p, "%-10llu [%5d]  (%2i) [  ]  [%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, Config::getSingleton()->getCurrentProcessNum(), source_file, source_line);
+		else // who knows
+			p += sprintf(p, "%-10llu [%5d]  (  ) [  ]  [%s:%4d]  ", (long long unsigned int) getTimestamp(), tid, source_file, source_line);
+	}
 
    switch (err)
    {

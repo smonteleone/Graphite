@@ -90,6 +90,14 @@ class Log
 #define LOG_ASSERT_ERROR(...) ((void)(0))
 
 #else
+// added by davidepatti
+#define LOG_PRINT(...)                                                  \
+   {                                                                    \
+   }                                                                    \
+
+// added by davidepatti
+#define MY_LOG_PRINT(...)                                                  \
+   _LOG_PRINT(Log::None, __VA_ARGS__); 
 
 #define __LOG_PRINT(err, file, line, ...)                               \
    {                                                                    \
@@ -109,8 +117,6 @@ class Log
    __LOG_PRINT(err, __FILE__, __LINE__, __VA_ARGS__);                   \
    }                                                                    \
  
-#define LOG_PRINT(...)                                                  \
-   _LOG_PRINT(Log::None, __VA_ARGS__);                                  \
  
 #define LOG_PRINT_WARNING(...)                  \
    _LOG_PRINT(Log::Warning, __VA_ARGS__);

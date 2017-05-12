@@ -1,4 +1,4 @@
-PARSEC_HOME=/afs/csail/group/carbon/benchmarks/parsec/parsec-3.0-graphite
+PARSEC_HOME=/home/davide/parsec-3.0
 PARSEC_LOCAL=$(SIM_ROOT)/tests/parsec/parsec-3.0
 
 APPS = blackscholes bodytrack facesim ferret fluidanimate freqmine raytrace swaptions vips x264

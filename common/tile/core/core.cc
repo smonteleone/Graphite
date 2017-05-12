@@ -47,7 +47,8 @@ Core::Core(Tile *tile, core_type_t core_type)
    _asynchronous_map[L1_ICACHE] = Time(0);
    _asynchronous_map[L1_DCACHE] = Time(0);
 
-   LOG_PRINT("Initialized Core.");
+if (getId().tile_id!=0)
+	   MY_LOG_PRINT("Initialized Core.");
 }
 
 Core::~Core()
@@ -130,7 +131,8 @@ Core::accessMemory(lock_signal_t lock_signal, mem_op_t mem_op_type, IntPtr addre
 Time
 Core::readInstructionMemory(IntPtr address, UInt32 instruction_size)
 {
-   LOG_PRINT("Instruction: Address(%#lx), Size(%u), Start READ", address, instruction_size);
+if (getId().tile_id!=0)
+   MY_LOG_PRINT("Instruction: Address(%#lx), Size(%u), Start READ", address, instruction_size);
 
    Byte buf[instruction_size];
    return initiateMemoryAccess(MemComponent::L1_ICACHE, Core::NONE, Core::READ, address, buf, instruction_size).second;
@@ -158,7 +160,8 @@ Core::initiateMemoryAccess(MemComponent::Type mem_component, lock_signal_t lock_
    Time initial_time = (time.getTime() == 0) ? _core_model->getCurrTime() : Time(time);
    Time curr_time = initial_time;
 
-   LOG_PRINT("Time(%llu), %s - ADDR(%#lx), data_size(%u), START",
+if (getId().tile_id!=0)
+   MY_LOG_PRINT("Time(%llu), %s - ADDR(%#lx), data_size(%u), START",
              initial_time.toNanosec(), ((mem_op_type == READ) ? "READ" : "WRITE"), address, data_size);
 
    UInt32 num_misses = 0;
@@ -248,7 +251,8 @@ Core::initiateMemoryAccess(MemComponent::Type mem_component, lock_signal_t lock_
    Time final_time = curr_time;
    LOG_ASSERT_ERROR(final_time >= initial_time, "final_time(%llu) < initial_time(%llu)", final_time.getTime(), initial_time.getTime());
    
-   LOG_PRINT("Time(%llu), %s - ADDR(%#lx), data_size(%u), END", 
+if (getId().tile_id!=0)
+   MY_LOG_PRINT("Time(%llu), %s - ADDR(%#lx), data_size(%u), END", 
              final_time.toNanosec(), ((mem_op_type == READ) ? "READ" : "WRITE"), address, data_size);
 
    // Calculate the round-trip time
