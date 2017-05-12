@@ -11,6 +11,7 @@ cp setup_parsec_3.0/parsec.conf config/
 # for building tools
 echo "[BLDCONF] Populating PARSEC directories with graphite.bldconf extending gcc.bldconf"
 ./bin/bldconfadd -n graphite -s gcc -f
+./setup_parsec_3.0/copycat.sh tools
 
 # Build the tools (yasm,cmake,libtool). These tools are built in
 # advance so that they need not be built during the time of
@@ -81,4 +82,6 @@ mkdir -p pkgs/apps/facesim/run/Storytelling/output
 # run/ directories. While running the benchmarks with the simulator,
 # untaring inputs is unnecessary.
 echo "[INPUTS] Untar'ing and setting up inputs in the run/ directory"
+./setup_parsec_3.0/copycat.sh libs
+./setup_parsec_3.0/copycat.sh apps
 ./setup_parsec_3.0/inputs.sh
